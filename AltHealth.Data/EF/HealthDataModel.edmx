@@ -1,0 +1,680 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="HealthModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tblClientInfo">
+          <Key>
+            <PropertyRef Name="Client_id" />
+          </Key>
+          <Property Name="Client_id" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="C_name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="C_surname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Code" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="C_Tel_H" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="C_Tel_W" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="C_Tel_Cell" Type="varchar" MaxLength="20" />
+          <Property Name="C_Email" Type="varchar" MaxLength="40" />
+          <Property Name="Reference_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblInv_Info">
+          <Key>
+            <PropertyRef Name="Inv_Num" />
+          </Key>
+          <Property Name="Inv_Num" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Inv_Date" Type="datetime" Nullable="false" />
+          <Property Name="Inv_Paid" Type="bit" Nullable="false" />
+          <Property Name="Inv_Paid_Date" Type="datetime" />
+          <Property Name="Comments" Type="varchar" MaxLength="255" />
+          <Property Name="Client_id" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblInv_items">
+          <Key>
+            <PropertyRef Name="Supplement_id" />
+            <PropertyRef Name="Inv_Num" />
+          </Key>
+          <Property Name="Item_Price" Type="numeric" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="Item_Quantity" Type="int" Nullable="false" />
+          <Property Name="Supplement_id" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Inv_Num" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblReference">
+          <Key>
+            <PropertyRef Name="Reference_ID" />
+          </Key>
+          <Property Name="Reference_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblSupplements">
+          <Key>
+            <PropertyRef Name="Supplement_id" />
+          </Key>
+          <Property Name="Supplement_id" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Supplement_Description" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Cost_excl" Type="numeric" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="Cost_incl" Type="numeric" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="Min_Level" Type="int" Nullable="false" />
+          <Property Name="Current_Stock_Levels" Type="int" Nullable="false" />
+          <Property Name="Nappi_code" Type="varchar" MaxLength="30" />
+          <Property Name="Supplier_Id" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblSupplier_info">
+          <Key>
+            <PropertyRef Name="Supplier_Id" />
+          </Key>
+          <Property Name="Supplier_Id" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Contact_Person" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Supplier_Tel" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Supplier_Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Bank" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Bank_Code" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Supplier_BankNum" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Supplier_Type_Bank_Annount" Type="varchar" MaxLength="15" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_tblInv_Info_Client_id">
+          <End Role="tblClientInfo" Type="Self.tblClientInfo" Multiplicity="1" />
+          <End Role="tblInv_Info" Type="Self.tblInv_Info" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblClientInfo">
+              <PropertyRef Name="Client_id" />
+            </Principal>
+            <Dependent Role="tblInv_Info">
+              <PropertyRef Name="Client_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblSupplements_Supplier_Id">
+          <End Role="tblSupplier_info" Type="Self.tblSupplier_info" Multiplicity="1" />
+          <End Role="tblSupplements" Type="Self.tblSupplements" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSupplier_info">
+              <PropertyRef Name="Supplier_Id" />
+            </Principal>
+            <Dependent Role="tblSupplements">
+              <PropertyRef Name="Supplier_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PK_tblClientInfo_Reference_ID">
+          <End Role="tblReference" Type="Self.tblReference" Multiplicity="1" />
+          <End Role="tblClientInfo" Type="Self.tblClientInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblReference">
+              <PropertyRef Name="Reference_ID" />
+            </Principal>
+            <Dependent Role="tblClientInfo">
+              <PropertyRef Name="Reference_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PK_tblInv_items_Inv_Num">
+          <End Role="tblInv_Info" Type="Self.tblInv_Info" Multiplicity="1" />
+          <End Role="tblInv_items" Type="Self.tblInv_items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblInv_Info">
+              <PropertyRef Name="Inv_Num" />
+            </Principal>
+            <Dependent Role="tblInv_items">
+              <PropertyRef Name="Inv_Num" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PK_tblInv_items_Supplement_id">
+          <End Role="tblSupplements" Type="Self.tblSupplements" Multiplicity="1" />
+          <End Role="tblInv_items" Type="Self.tblInv_items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSupplements">
+              <PropertyRef Name="Supplement_id" />
+            </Principal>
+            <Dependent Role="tblInv_items">
+              <PropertyRef Name="Supplement_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="spGenerateInvoiceNumber" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spGetBirthDays" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spGetCartItems" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="InvoiceNo" Type="varchar" Mode="In" />
+          <Parameter Name="ClientID" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="spGetClients" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Search" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="spGetClientsWithNoEmails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spGetInvoices" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Search" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="spGetPurchaseStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="StartYear" Type="int" Mode="In" />
+        </Function>
+        <Function Name="spGetStockLevels" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spGetSuppliers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Search" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="spGetSuppliments" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Search" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="spGetTopTenClients" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="spGetUnpaidInvoices" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="HealthModelStoreContainer">
+          <EntitySet Name="tblClientInfo" EntityType="Self.tblClientInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblInv_Info" EntityType="Self.tblInv_Info" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblInv_items" EntityType="Self.tblInv_items" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblReference" EntityType="Self.tblReference" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblSupplements" EntityType="Self.tblSupplements" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblSupplier_info" EntityType="Self.tblSupplier_info" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_tblInv_Info_Client_id" Association="Self.FK_tblInv_Info_Client_id">
+            <End Role="tblClientInfo" EntitySet="tblClientInfo" />
+            <End Role="tblInv_Info" EntitySet="tblInv_Info" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblSupplements_Supplier_Id" Association="Self.FK_tblSupplements_Supplier_Id">
+            <End Role="tblSupplier_info" EntitySet="tblSupplier_info" />
+            <End Role="tblSupplements" EntitySet="tblSupplements" />
+          </AssociationSet>
+          <AssociationSet Name="PK_tblClientInfo_Reference_ID" Association="Self.PK_tblClientInfo_Reference_ID">
+            <End Role="tblReference" EntitySet="tblReference" />
+            <End Role="tblClientInfo" EntitySet="tblClientInfo" />
+          </AssociationSet>
+          <AssociationSet Name="PK_tblInv_items_Inv_Num" Association="Self.PK_tblInv_items_Inv_Num">
+            <End Role="tblInv_Info" EntitySet="tblInv_Info" />
+            <End Role="tblInv_items" EntitySet="tblInv_items" />
+          </AssociationSet>
+          <AssociationSet Name="PK_tblInv_items_Supplement_id" Association="Self.PK_tblInv_items_Supplement_id">
+            <End Role="tblSupplements" EntitySet="tblSupplements" />
+            <End Role="tblInv_items" EntitySet="tblInv_items" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="HealthModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tblClientInfo">
+          <Key>
+            <PropertyRef Name="Client_id" />
+          </Key>
+          <Property Name="Client_id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="C_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="C_surname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Code" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="C_Tel_H" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="C_Tel_W" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="C_Tel_Cell" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="C_Email" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Reference_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tblInv_Info" Relationship="Self.FK_tblInv_Info_Client_id" FromRole="tblClientInfo" ToRole="tblInv_Info" />
+          <NavigationProperty Name="tblReference" Relationship="Self.PK_tblClientInfo_Reference_ID" FromRole="tblClientInfo" ToRole="tblReference" />
+        </EntityType>
+        <EntityType Name="tblInv_Info">
+          <Key>
+            <PropertyRef Name="Inv_Num" />
+          </Key>
+          <Property Name="Inv_Num" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Inv_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Inv_Paid" Type="Boolean" Nullable="false" />
+          <Property Name="Inv_Paid_Date" Type="DateTime" Precision="3" />
+          <Property Name="Comments" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Client_id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblClientInfo" Relationship="Self.FK_tblInv_Info_Client_id" FromRole="tblInv_Info" ToRole="tblClientInfo" />
+          <NavigationProperty Name="tblInv_items" Relationship="Self.PK_tblInv_items_Inv_Num" FromRole="tblInv_Info" ToRole="tblInv_items" />
+        </EntityType>
+        <EntityType Name="tblInv_items">
+          <Key>
+            <PropertyRef Name="Supplement_id" />
+            <PropertyRef Name="Inv_Num" />
+          </Key>
+          <Property Name="Item_Price" Type="Decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="Item_Quantity" Type="Int32" Nullable="false" />
+          <Property Name="Supplement_id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Inv_Num" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblInv_Info" Relationship="Self.PK_tblInv_items_Inv_Num" FromRole="tblInv_items" ToRole="tblInv_Info" />
+          <NavigationProperty Name="tblSupplement" Relationship="Self.PK_tblInv_items_Supplement_id" FromRole="tblInv_items" ToRole="tblSupplements" />
+        </EntityType>
+        <EntityType Name="tblReference">
+          <Key>
+            <PropertyRef Name="Reference_ID" />
+          </Key>
+          <Property Name="Reference_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblClientInfoes" Relationship="Self.PK_tblClientInfo_Reference_ID" FromRole="tblReference" ToRole="tblClientInfo" />
+        </EntityType>
+        <EntityType Name="tblSupplement">
+          <Key>
+            <PropertyRef Name="Supplement_id" />
+          </Key>
+          <Property Name="Supplement_id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Supplement_Description" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Cost_excl" Type="Decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="Cost_incl" Type="Decimal" Precision="9" Scale="2" Nullable="false" />
+          <Property Name="Min_Level" Type="Int32" Nullable="false" />
+          <Property Name="Current_Stock_Levels" Type="Int32" Nullable="false" />
+          <Property Name="Nappi_code" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Supplier_Id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblInv_items" Relationship="Self.PK_tblInv_items_Supplement_id" FromRole="tblSupplements" ToRole="tblInv_items" />
+          <NavigationProperty Name="tblSupplier_info" Relationship="Self.FK_tblSupplements_Supplier_Id" FromRole="tblSupplements" ToRole="tblSupplier_info" />
+        </EntityType>
+        <EntityType Name="tblSupplier_info">
+          <Key>
+            <PropertyRef Name="Supplier_Id" />
+          </Key>
+          <Property Name="Supplier_Id" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Contact_Person" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Supplier_Tel" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Supplier_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Bank" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Bank_Code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Supplier_BankNum" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Supplier_Type_Bank_Annount" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="tblSupplements" Relationship="Self.FK_tblSupplements_Supplier_Id" FromRole="tblSupplier_info" ToRole="tblSupplements" />
+        </EntityType>
+        <Association Name="FK_tblInv_Info_Client_id">
+          <End Role="tblClientInfo" Type="Self.tblClientInfo" Multiplicity="1" />
+          <End Role="tblInv_Info" Type="Self.tblInv_Info" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblClientInfo">
+              <PropertyRef Name="Client_id" />
+            </Principal>
+            <Dependent Role="tblInv_Info">
+              <PropertyRef Name="Client_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PK_tblClientInfo_Reference_ID">
+          <End Role="tblReference" Type="Self.tblReference" Multiplicity="1" />
+          <End Role="tblClientInfo" Type="Self.tblClientInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblReference">
+              <PropertyRef Name="Reference_ID" />
+            </Principal>
+            <Dependent Role="tblClientInfo">
+              <PropertyRef Name="Reference_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PK_tblInv_items_Inv_Num">
+          <End Role="tblInv_Info" Type="Self.tblInv_Info" Multiplicity="1" />
+          <End Role="tblInv_items" Type="Self.tblInv_items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblInv_Info">
+              <PropertyRef Name="Inv_Num" />
+            </Principal>
+            <Dependent Role="tblInv_items">
+              <PropertyRef Name="Inv_Num" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PK_tblInv_items_Supplement_id">
+          <End Role="tblSupplements" Type="Self.tblSupplement" Multiplicity="1" />
+          <End Role="tblInv_items" Type="Self.tblInv_items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSupplements">
+              <PropertyRef Name="Supplement_id" />
+            </Principal>
+            <Dependent Role="tblInv_items">
+              <PropertyRef Name="Supplement_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblSupplements_Supplier_Id">
+          <End Role="tblSupplier_info" Type="Self.tblSupplier_info" Multiplicity="1" />
+          <End Role="tblSupplements" Type="Self.tblSupplement" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSupplier_info">
+              <PropertyRef Name="Supplier_Id" />
+            </Principal>
+            <Dependent Role="tblSupplements">
+              <PropertyRef Name="Supplier_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="HealthEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tblClientInfoes" EntityType="Self.tblClientInfo" />
+          <EntitySet Name="tblInv_Info" EntityType="Self.tblInv_Info" />
+          <EntitySet Name="tblInv_items" EntityType="Self.tblInv_items" />
+          <EntitySet Name="tblReferences" EntityType="Self.tblReference" />
+          <EntitySet Name="tblSupplements" EntityType="Self.tblSupplement" />
+          <EntitySet Name="tblSupplier_info" EntityType="Self.tblSupplier_info" />
+          <AssociationSet Name="FK_tblInv_Info_Client_id" Association="Self.FK_tblInv_Info_Client_id">
+            <End Role="tblClientInfo" EntitySet="tblClientInfoes" />
+            <End Role="tblInv_Info" EntitySet="tblInv_Info" />
+          </AssociationSet>
+          <AssociationSet Name="PK_tblClientInfo_Reference_ID" Association="Self.PK_tblClientInfo_Reference_ID">
+            <End Role="tblReference" EntitySet="tblReferences" />
+            <End Role="tblClientInfo" EntitySet="tblClientInfoes" />
+          </AssociationSet>
+          <AssociationSet Name="PK_tblInv_items_Inv_Num" Association="Self.PK_tblInv_items_Inv_Num">
+            <End Role="tblInv_Info" EntitySet="tblInv_Info" />
+            <End Role="tblInv_items" EntitySet="tblInv_items" />
+          </AssociationSet>
+          <AssociationSet Name="PK_tblInv_items_Supplement_id" Association="Self.PK_tblInv_items_Supplement_id">
+            <End Role="tblSupplements" EntitySet="tblSupplements" />
+            <End Role="tblInv_items" EntitySet="tblInv_items" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblSupplements_Supplier_Id" Association="Self.FK_tblSupplements_Supplier_Id">
+            <End Role="tblSupplier_info" EntitySet="tblSupplier_info" />
+            <End Role="tblSupplements" EntitySet="tblSupplements" />
+          </AssociationSet>
+          <FunctionImport Name="spGenerateInvoiceNumber" ReturnType="Collection(String)" />
+          <FunctionImport Name="spGetBirthDays" ReturnType="Collection(HealthModel.spGetBirthDays_Result)" />
+          <FunctionImport Name="spGetCartItems" ReturnType="Collection(HealthModel.spGetCartItems_Result)">
+            <Parameter Name="InvoiceNo" Mode="In" Type="String" />
+            <Parameter Name="ClientID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetClients" ReturnType="Collection(HealthModel.spGetClients_Result)">
+          <Parameter Name="Search" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetSuppliers" ReturnType="Collection(HealthModel.spGetSuppliers_Result)">
+          <Parameter Name="Search" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetSuppliments" ReturnType="Collection(HealthModel.spGetSuppliments_Result)">
+          <Parameter Name="Search" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="spGetTopTenClients" ReturnType="Collection(HealthModel.spGetTopTenClients_Result)" />
+          <FunctionImport Name="spGetUnpaidInvoices" ReturnType="Collection(HealthModel.spGetUnpaidInvoices_Result)" />
+          <FunctionImport Name="spGetStockLevels" ReturnType="Collection(HealthModel.spGetStockLevels_Result)" />
+          <FunctionImport Name="spGetPurchaseStats" ReturnType="Collection(HealthModel.spGetPurchaseStats_Result)" >
+            <Parameter Name="StartYear" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="spGetClientsWithNoEmails" ReturnType="Collection(HealthModel.spGetClientsWithNoEmails_Result)" />
+          <FunctionImport Name="spGetInvoices" ReturnType="Collection(HealthModel.spGetInvoices_Result)" >
+          <Parameter Name="Search" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="spGetBirthDays_Result">
+          <Property Type="String" Name="Client_id" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="101" />
+        </ComplexType>
+        <ComplexType Name="spGetCartItems_Result">
+          <Property Type="String" Name="Supplement_id" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Supplement_Description" Nullable="false" MaxLength="255" />
+          <Property Type="Int32" Name="Item_Quantity" Nullable="false" />
+          <Property Type="Decimal" Name="Item_Price" Nullable="false" Precision="9" Scale="2" />
+          <Property Type="Decimal" Name="SubTotal" Nullable="true" Precision="20" Scale="2" />
+        </ComplexType>
+        <ComplexType Name="spGetClients_Result">
+          <Property Type="String" Name="Client_id" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="101" />
+          <Property Type="String" Name="Address" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="Code" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="C_Tel_H" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="C_Tel_W" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="C_Tel_Cell" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="C_Email" Nullable="false" MaxLength="40" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="spGetSuppliers_Result">
+          <Property Type="String" Name="Supplier_Id" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Contact_Person" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Supplier_Tel" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Supplier_Email" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Bank" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Bank_Code" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="Supplier_BankNum" Nullable="false" MaxLength="30" />
+          <Property Type="String" Name="Supplier_Type_Bank_Annount" Nullable="false" MaxLength="15" />
+        </ComplexType>
+        <ComplexType Name="spGetSuppliments_Result">
+          <Property Type="String" Name="Supplement_id" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Supplier_Id" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Supplement_Description" Nullable="false" MaxLength="255" />
+          <Property Type="Decimal" Name="Cost_excl" Nullable="false" Precision="9" Scale="2" />
+          <Property Type="Decimal" Name="Cost_incl" Nullable="false" Precision="9" Scale="2" />
+          <Property Type="Int32" Name="Min_Level" Nullable="false" />
+          <Property Type="Int32" Name="Current_Stock_Levels" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="spGetTopTenClients_Result">
+          <Property Type="String" Name="Client_id" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="101" />
+          <Property Type="Int32" Name="Frequency" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="spGetUnpaidInvoices_Result">
+          <Property Type="String" Name="Client_id" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="101" />
+          <Property Type="String" Name="Inv_Num" Nullable="false" MaxLength="10" />
+          <Property Type="DateTime" Name="Inv_Date" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="spGetStockLevels_Result">
+          <Property Type="String" Name="Supplement" Nullable="false" MaxLength="276" />
+          <Property Type="String" Name="SupplierInformation" Nullable="false" MaxLength="92" />
+          <Property Type="Int32" Name="Min_Level" Nullable="false" />
+          <Property Type="Int32" Name="Current_Stock_Levels" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="spGetPurchaseStats_Result">
+          <Property Type="Int32" Name="NumberOfPurchases" Nullable="true" />
+          <Property Type="String" Name="Month" Nullable="true" MaxLength="30" />
+        </ComplexType>
+        <ComplexType Name="spGetClientsWithNoEmails_Result">
+          <Property Type="String" Name="Client_id" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="C_Tel_H" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="C_Tel_W" Nullable="false" MaxLength="20" />
+        </ComplexType>
+        <ComplexType Name="spGetInvoices_Result">
+          <Property Type="String" Name="Inv_Num" Nullable="false" MaxLength="10" />
+          <Property Type="Boolean" Name="Inv_Paid" Nullable="false" />
+          <Property Type="DateTime" Name="Inv_Date" Nullable="false" Precision="23" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="101" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HealthModelStoreContainer" CdmEntityContainer="HealthEntities">
+          <EntitySetMapping Name="tblClientInfoes">
+            <EntityTypeMapping TypeName="HealthModel.tblClientInfo">
+              <MappingFragment StoreEntitySet="tblClientInfo">
+                <ScalarProperty Name="Client_id" ColumnName="Client_id" />
+                <ScalarProperty Name="C_name" ColumnName="C_name" />
+                <ScalarProperty Name="C_surname" ColumnName="C_surname" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="C_Tel_H" ColumnName="C_Tel_H" />
+                <ScalarProperty Name="C_Tel_W" ColumnName="C_Tel_W" />
+                <ScalarProperty Name="C_Tel_Cell" ColumnName="C_Tel_Cell" />
+                <ScalarProperty Name="C_Email" ColumnName="C_Email" />
+                <ScalarProperty Name="Reference_ID" ColumnName="Reference_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblInv_Info">
+            <EntityTypeMapping TypeName="HealthModel.tblInv_Info">
+              <MappingFragment StoreEntitySet="tblInv_Info">
+                <ScalarProperty Name="Inv_Num" ColumnName="Inv_Num" />
+                <ScalarProperty Name="Inv_Date" ColumnName="Inv_Date" />
+                <ScalarProperty Name="Inv_Paid" ColumnName="Inv_Paid" />
+                <ScalarProperty Name="Inv_Paid_Date" ColumnName="Inv_Paid_Date" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="Client_id" ColumnName="Client_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblInv_items">
+            <EntityTypeMapping TypeName="HealthModel.tblInv_items">
+              <MappingFragment StoreEntitySet="tblInv_items">
+                <ScalarProperty Name="Item_Price" ColumnName="Item_Price" />
+                <ScalarProperty Name="Item_Quantity" ColumnName="Item_Quantity" />
+                <ScalarProperty Name="Supplement_id" ColumnName="Supplement_id" />
+                <ScalarProperty Name="Inv_Num" ColumnName="Inv_Num" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblReferences">
+            <EntityTypeMapping TypeName="HealthModel.tblReference">
+              <MappingFragment StoreEntitySet="tblReference">
+                <ScalarProperty Name="Reference_ID" ColumnName="Reference_ID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSupplements">
+            <EntityTypeMapping TypeName="HealthModel.tblSupplement">
+              <MappingFragment StoreEntitySet="tblSupplements">
+                <ScalarProperty Name="Supplement_id" ColumnName="Supplement_id" />
+                <ScalarProperty Name="Supplement_Description" ColumnName="Supplement_Description" />
+                <ScalarProperty Name="Cost_excl" ColumnName="Cost_excl" />
+                <ScalarProperty Name="Cost_incl" ColumnName="Cost_incl" />
+                <ScalarProperty Name="Min_Level" ColumnName="Min_Level" />
+                <ScalarProperty Name="Current_Stock_Levels" ColumnName="Current_Stock_Levels" />
+                <ScalarProperty Name="Nappi_code" ColumnName="Nappi_code" />
+                <ScalarProperty Name="Supplier_Id" ColumnName="Supplier_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSupplier_info">
+            <EntityTypeMapping TypeName="HealthModel.tblSupplier_info">
+              <MappingFragment StoreEntitySet="tblSupplier_info">
+                <ScalarProperty Name="Supplier_Id" ColumnName="Supplier_Id" />
+                <ScalarProperty Name="Contact_Person" ColumnName="Contact_Person" />
+                <ScalarProperty Name="Supplier_Tel" ColumnName="Supplier_Tel" />
+                <ScalarProperty Name="Supplier_Email" ColumnName="Supplier_Email" />
+                <ScalarProperty Name="Bank" ColumnName="Bank" />
+                <ScalarProperty Name="Bank_Code" ColumnName="Bank_Code" />
+                <ScalarProperty Name="Supplier_BankNum" ColumnName="Supplier_BankNum" />
+                <ScalarProperty Name="Supplier_Type_Bank_Annount" ColumnName="Supplier_Type_Bank_Annount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spGenerateInvoiceNumber" FunctionName="HealthModel.Store.spGenerateInvoiceNumber" />
+          <FunctionImportMapping FunctionImportName="spGetBirthDays" FunctionName="HealthModel.Store.spGetBirthDays">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthModel.spGetBirthDays_Result">
+                <ScalarProperty Name="Client_id" ColumnName="Client_id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetCartItems" FunctionName="HealthModel.Store.spGetCartItems">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthModel.spGetCartItems_Result">
+                <ScalarProperty Name="Supplement_id" ColumnName="Supplement_id" />
+                <ScalarProperty Name="Supplement_Description" ColumnName="Supplement_Description" />
+                <ScalarProperty Name="Item_Quantity" ColumnName="Item_Quantity" />
+                <ScalarProperty Name="Item_Price" ColumnName="Item_Price" />
+                <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetClients" FunctionName="HealthModel.Store.spGetClients">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthModel.spGetClients_Result">
+                <ScalarProperty Name="Client_id" ColumnName="Client_id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="C_Tel_H" ColumnName="C_Tel_H" />
+                <ScalarProperty Name="C_Tel_W" ColumnName="C_Tel_W" />
+                <ScalarProperty Name="C_Tel_Cell" ColumnName="C_Tel_Cell" />
+                <ScalarProperty Name="C_Email" ColumnName="C_Email" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetSuppliers" FunctionName="HealthModel.Store.spGetSuppliers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthModel.spGetSuppliers_Result">
+                <ScalarProperty Name="Supplier_Id" ColumnName="Supplier_Id" />
+                <ScalarProperty Name="Contact_Person" ColumnName="Contact_Person" />
+                <ScalarProperty Name="Supplier_Tel" ColumnName="Supplier_Tel" />
+                <ScalarProperty Name="Supplier_Email" ColumnName="Supplier_Email" />
+                <ScalarProperty Name="Bank" ColumnName="Bank" />
+                <ScalarProperty Name="Bank_Code" ColumnName="Bank_Code" />
+                <ScalarProperty Name="Supplier_BankNum" ColumnName="Supplier_BankNum" />
+                <ScalarProperty Name="Supplier_Type_Bank_Annount" ColumnName="Supplier_Type_Bank_Annount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetSuppliments" FunctionName="HealthModel.Store.spGetSuppliments">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthModel.spGetSuppliments_Result">
+                <ScalarProperty Name="Supplement_id" ColumnName="Supplement_id" />
+                <ScalarProperty Name="Supplier_Id" ColumnName="Supplier_Id" />
+                <ScalarProperty Name="Supplement_Description" ColumnName="Supplement_Description" />
+                <ScalarProperty Name="Cost_excl" ColumnName="Cost_excl" />
+                <ScalarProperty Name="Cost_incl" ColumnName="Cost_incl" />
+                <ScalarProperty Name="Min_Level" ColumnName="Min_Level" />
+                <ScalarProperty Name="Current_Stock_Levels" ColumnName="Current_Stock_Levels" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetTopTenClients" FunctionName="HealthModel.Store.spGetTopTenClients">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthModel.spGetTopTenClients_Result">
+                <ScalarProperty Name="Client_id" ColumnName="Client_id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Frequency" ColumnName="Frequency" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetUnpaidInvoices" FunctionName="HealthModel.Store.spGetUnpaidInvoices">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthModel.spGetUnpaidInvoices_Result">
+                <ScalarProperty Name="Client_id" ColumnName="Client_id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Inv_Num" ColumnName="Inv_Num" />
+                <ScalarProperty Name="Inv_Date" ColumnName="Inv_Date" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetStockLevels" FunctionName="HealthModel.Store.spGetStockLevels">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthModel.spGetStockLevels_Result">
+                <ScalarProperty Name="Supplement" ColumnName="Supplement" />
+                <ScalarProperty Name="SupplierInformation" ColumnName="SupplierInformation" />
+                <ScalarProperty Name="Min_Level" ColumnName="Min_Level" />
+                <ScalarProperty Name="Current_Stock_Levels" ColumnName="Current_Stock_Levels" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetPurchaseStats" FunctionName="HealthModel.Store.spGetPurchaseStats">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthModel.spGetPurchaseStats_Result">
+                <ScalarProperty Name="NumberOfPurchases" ColumnName="NumberOfPurchases" />
+                <ScalarProperty Name="Month" ColumnName="Month" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetClientsWithNoEmails" FunctionName="HealthModel.Store.spGetClientsWithNoEmails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthModel.spGetClientsWithNoEmails_Result">
+                <ScalarProperty Name="Client_id" ColumnName="Client_id" />
+                <ScalarProperty Name="C_Tel_H" ColumnName="C_Tel_H" />
+                <ScalarProperty Name="C_Tel_W" ColumnName="C_Tel_W" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="spGetInvoices" FunctionName="HealthModel.Store.spGetInvoices">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthModel.spGetInvoices_Result">
+                <ScalarProperty Name="Inv_Num" ColumnName="Inv_Num" />
+                <ScalarProperty Name="Inv_Paid" ColumnName="Inv_Paid" />
+                <ScalarProperty Name="Inv_Date" ColumnName="Inv_Date" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

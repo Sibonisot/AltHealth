@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="cd89d9dde7104f44be65ad29c22b3f31" Name="Diagram1">
+        <EntityTypeShape EntityType="HealthModel.tblClientInfo" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthModel.tblInv_Info" Width="1.5" PointX="3" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthModel.tblInv_items" Width="1.5" PointX="5.25" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthModel.tblReference" Width="1.5" PointX="1.5" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthModel.tblSupplement" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthModel.tblSupplier_info" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
+        <AssociationConnector Association="HealthModel.FK_tblInv_Info_Client_id" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthModel.PK_tblClientInfo_Reference_ID" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthModel.PK_tblInv_items_Inv_Num" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthModel.PK_tblInv_items_Supplement_id" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthModel.FK_tblSupplements_Supplier_Id" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
